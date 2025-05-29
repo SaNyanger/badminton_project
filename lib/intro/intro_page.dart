@@ -36,7 +36,7 @@ class _IntroPage extends State<IntroPage> {
           if (snapshot.hasError || snapshot.data == false) {
             return const AlertDialog(
               title: Text(Constant.APP_NAME),
-              content: Text('인터넷 연결이 없거나 자동 로그인이 실패했습니다. 로그인 화면으로 이동합니다.'),
+              content: Text('인터넷 연결이 없거나 자동 로그인이 실패했습니다. 로그인 화면으로 이동합니다.', style: TextStyle(fontFamily: 'Maple_L',)),
             );
           }
 
