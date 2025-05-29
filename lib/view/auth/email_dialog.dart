@@ -24,7 +24,7 @@ class _SignUpWithEmailPage extends State<SignUpWithEmailPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('이메일로 회원가입', style: TextStyle(color: Colors.black)),
+        title: const Text('이메일로 회원가입', style: TextStyle(color: Colors.black, fontFamily: 'Maple_L',)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(
@@ -143,7 +143,7 @@ class _SignUpWithEmailPage extends State<SignUpWithEmailPage> {
                       );
                     }
                   },
-                  child: const Text('Sign up'),
+                  child: const Text('Sign up', style: TextStyle(fontFamily: 'Maple_L',)),
                 ),
               ],
             ),

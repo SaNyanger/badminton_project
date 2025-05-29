@@ -48,7 +48,7 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
 
       await _updateUserGroup(groupId);
     } else {
-      Get.snackbar("오류", "이미 존재하는 그룹 ID입니다.");
+      Get.snackbar("오류", "이미 존재하는 그룹 ID입니다.", backgroundColor: Colors.white,);
     }
   }
 
@@ -67,7 +67,7 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
 
       await _updateUserGroup(groupId);
     } else {
-      Get.snackbar("오류", "존재하지 않는 그룹입니다.");
+      Get.snackbar("오류", "존재하지 않는 그룹입니다.", backgroundColor: Colors.white,);
     }
   }
 
@@ -87,7 +87,7 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("그룹 설정")),
+      appBar: AppBar(title: const Text("그룹 설정", style: TextStyle(fontFamily: 'Maple_L',))),
       body: _user == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -106,11 +106,11 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _createGroup,
-              child: const Text("새 그룹 생성"),
+              child: const Text("새 그룹 생성", style: TextStyle(fontFamily: 'Maple_L',)),
             ),
             ElevatedButton(
               onPressed: _joinGroup,
-              child: const Text("기존 그룹 참가"),
+              child: const Text("기존 그룹 참가", style: TextStyle(fontFamily: 'Maple_L',)),
             ),
           ],
         ),

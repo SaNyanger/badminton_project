@@ -22,7 +22,7 @@ class _LoginWithEmailPage extends State<LoginWithEmailPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('이메일로 로그인', style: TextStyle(color: Colors.black)),
+        title: Text('이메일로 로그인', style: TextStyle(color: Colors.black,fontFamily: 'Maple_L',)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,7 +86,7 @@ class _LoginWithEmailPage extends State<LoginWithEmailPage> {
                       Get.back(result: BaddyUser(email: _emailController.text.trim() , password:_passwordController.text.trim()));
                     }
                   },
-                  child: Text('Login'),
+                  child: Text('Login', style: TextStyle(color: Colors.white,fontFamily: 'Maple_L',)),
                 ),
               ),
             ],

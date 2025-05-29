@@ -11,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'dart:math';
 
 import '../../data/constant.dart';
 import 'email_dialog.dart';
@@ -60,12 +61,12 @@ class _AuthPage extends State<AuthPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('비밀번호 초기화', style: TextStyle(color: Colors.black)),
+          title: Text('비밀번호 초기화', style: TextStyle(color: Colors.black, fontFamily: 'Maple_B')),
           content: TextFormField(
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black,fontFamily: 'Maple_L'),
             decoration: InputDecoration(
               hintText: 'Enter your email',
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(color: Colors.grey, fontFamily: 'Maple_L'),
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.black),
               ),
@@ -80,14 +81,14 @@ class _AuthPage extends State<AuthPage> {
           actions: [
             TextButton(
               onPressed: () => Get.back(),
-              child: Text('Cancel', style: TextStyle(color: Colors.black)),
+              child: Text('취소', style: TextStyle(color: Colors.black, fontFamily: 'Maple_L')),
             ),
             TextButton(
               onPressed: () async {
                 await _auth.sendPasswordResetEmail(email: email);
                 Get.back();
               },
-              child: Text('Confirm', style: TextStyle(color: Colors.black)),
+              child: Text('확인', style: TextStyle(color: Colors.black, fontFamily: 'Maple_L')),
             ),
           ],
         );
@@ -100,11 +101,11 @@ class _AuthPage extends State<AuthPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      // 1. Firebase 인증
+      //  Firebase 인증
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      // 2. Firestore 저장
+      //  Firestore 저장
       await FirebaseFirestore.instance.collection('baddyusers').doc(email).set({
         'email': email,
         'fcm': '',
@@ -115,7 +116,7 @@ class _AuthPage extends State<AuthPage> {
         'name': name,
       }, SetOptions(merge: true));
 
-      // 3. Get.put 반드시 여기서 먼저!!
+
       final baddyUser = BaddyUser(
         email: email,
         password: password,
@@ -127,12 +128,12 @@ class _AuthPage extends State<AuthPage> {
       if (Get.isRegistered<BaddyUser>()) {
         Get.delete<BaddyUser>();
       }
-      Get.put(baddyUser); // ✅ 이게 등록되지 않으면 Get.find()에서 죽음
-      print('✅ BaddyUser Get.put 완료');
+      Get.put(baddyUser); // 이게 등록되지 않으면 Get.find()에서 죽음
+      print('BaddyUser Get.put 완료');
 
-      // 4. UI 이동은 마지막에!
+      // UI 이동
       setState(() {
-        Get.snackbar(Constant.APP_NAME, '회원가입 성공');
+        Get.snackbar(Constant.APP_NAME, '회원가입 성공', backgroundColor: Colors.white,);
       });
 
         Get.to(() => GroupSetupPage(user: baddyUser));
@@ -140,12 +141,19 @@ class _AuthPage extends State<AuthPage> {
 
     } on FirebaseAuthException catch (e) {
       setState(() {
-        Get.snackbar(Constant.APP_NAME, e.message ?? '회원가입 중 오류 발생');
+        Get.snackbar(Constant.APP_NAME, e.message ?? '회원가입 중 오류 발생', backgroundColor: Colors.white,);
       });
     }
   }
 
-
+  //구글 로그인 유저들을 위한 무작위 이름 생성 함수
+  String generateRandomName() {
+    const base = ['호랭이', '강쥐', '참새', '고양이', '펭귄', '너굴맨', '앵무새', '해달', '찍찍이'];
+    final random = Random();
+    final pick = base[random.nextInt(base.length)];
+    final number = random.nextInt(9999).toString().padLeft(4, '0');
+    return '$pick#$number';
+  }
 
   void _signIn(SignType type, String email, String password) async {
     try {
@@ -166,7 +174,7 @@ class _AuthPage extends State<AuthPage> {
         user = result.user;
       }
 
-      Get.snackbar(Constant.APP_NAME, '로그인 성공');
+      Get.snackbar(Constant.APP_NAME, '로그인 성공', backgroundColor: Colors.white,);
 
       final token = await FirebaseMessaging.instance.getToken();
       final prefs = await SharedPreferences.getInstance();
@@ -181,7 +189,11 @@ class _AuthPage extends State<AuthPage> {
           .doc(email)
           .get();
 
-      final name = userDoc.data()?['name'] ?? '';
+      //구글 로그인 하는 사람들 이름 생성 안하고 넘어오는 문제 때문에 fetchedName으로 추가함
+      final fetchedName = userDoc.data()?['name'];
+      final name = (fetchedName != null && fetchedName.toString().trim().isNotEmpty)
+          ? fetchedName
+          : generateRandomName();
       final groupId = userDoc.data()?['groupId'] ?? '';
 
       final baddyUser = BaddyUser(email: email, password: password, name: name, groupId: groupId);
@@ -208,7 +220,7 @@ class _AuthPage extends State<AuthPage> {
         Get.off(() => const MainPage());
       }
 
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) { //로그인 오류 처리
       print('FirebaseAuthException code: ${e.code}');
       print('FirebaseAuthException message: ${e.message}');
       String message;
@@ -234,7 +246,7 @@ class _AuthPage extends State<AuthPage> {
           message = '로그인 중 알 수 없는 오류가 발생했습니다.';
           break;
       }
-      Get.snackbar(Constant.APP_NAME, message);
+      Get.snackbar(Constant.APP_NAME, message, backgroundColor: Colors.white,);
     }
   }
 
@@ -250,7 +262,7 @@ class _AuthPage extends State<AuthPage> {
             children: <Widget>[
               const Text(
                 Constant.APP_NAME,
-                style: TextStyle(fontFamily: 'Maple_L', fontSize: 40, color: Colors.white),
+                style: TextStyle(fontFamily: 'Maple_B', fontSize: 60, color: Colors.white),
               ),
               Lottie.asset(
                 'res/animation/baddy.json',
@@ -272,7 +284,9 @@ class _AuthPage extends State<AuthPage> {
               SignInButton(
                 Buttons.google,
                 text: "Sign up with Google",
-                onPressed: signInWithGoogle,
+                onPressed: () async{
+                  await signInWithGoogle();
+                  },
               ),
               SizedBox(height: 30),
               MaterialButton(
@@ -282,7 +296,7 @@ class _AuthPage extends State<AuthPage> {
                     _signIn(SignType.Email, user.email, user.password);
                   }
                 },
-                child: Text('이메일로 로그인하기'),
+                child: Text('이메일로 로그인하기', style: TextStyle(fontFamily: 'Maple_L',)),
                 color: Colors.white,
               ),
               SizedBox(height: 10),
@@ -291,7 +305,7 @@ class _AuthPage extends State<AuthPage> {
                   backgroundColor: Colors.blueGrey,
                 ),
                 onPressed: _findPassword,
-                child: Text('비밀번호 찾기', style: TextStyle(color: Colors.white)),
+                child: Text('비밀번호 찾기', style: TextStyle(color: Colors.white, fontFamily: 'Maple_L',)),
               ),
             ],
           ),

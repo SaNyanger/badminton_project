@@ -56,7 +56,7 @@ class _IntroPage extends State<IntroPage> {
             const Text(
               Constant.APP_NAME,
               style: TextStyle(
-                fontSize: 70,
+                fontSize: 75,
                 fontFamily: 'Maple_B',
                 color: Colors.white,
               ),

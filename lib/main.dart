@@ -102,7 +102,7 @@ void main() async {
   runApp(const MyApp());
 }
 
-String? _token;
+//String? _token;
 String? initialMessage;
 bool _resolved = false;
 
@@ -117,12 +117,12 @@ class MyApp extends StatelessWidget {
         _resolved = true;
         initialMessage = value?.data.toString();
       });
-// 앱이 실행될 때 메세지를 받으면 처리하는 콜백 함수
+  // 앱이 실행될 때 메세지를 받으면 처리하는 콜백 함수
       FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
-// 앱이 백그라운드에서 실행 중일 때 사용자가 알람을 탭하여 앱을 열 때 호출
+  // 앱이 백그라운드에서 실행 중일 때 사용자가 알람을 탭하여 앱을 열 때 호출
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        String linkId =  message.data['link'];
+        //String linkId =  message.data['link'];
         //Get.to(LinkPage(link: linkId));
         print('A new onMessageOpenedApp event was published! ${message.data}' );
       });
