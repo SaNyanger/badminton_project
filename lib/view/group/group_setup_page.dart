@@ -87,7 +87,8 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("그룹 설정", style: TextStyle(fontFamily: 'Maple_L',))),
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.black, title: const Text("그룹 설정", style: TextStyle(color: Colors.white, fontFamily: 'Maple_L',))),
       body: _user == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -105,10 +106,18 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
               onPressed: _createGroup,
               child: const Text("새 그룹 생성", style: TextStyle(fontFamily: 'Maple_L',)),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
               onPressed: _joinGroup,
               child: const Text("기존 그룹 참가", style: TextStyle(fontFamily: 'Maple_L',)),
             ),

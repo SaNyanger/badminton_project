@@ -130,7 +130,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: Constant.APP_NAME,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white70),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       home: IntroPage(),

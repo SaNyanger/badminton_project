@@ -133,15 +133,34 @@ class _AuthPage extends State<AuthPage> {
 
       // UI 이동
       setState(() {
-        Get.snackbar(Constant.APP_NAME, '회원가입 성공', backgroundColor: Colors.white,);
+        Get.snackbar(Constant.APP_NAME, '회원가입 성공', backgroundColor: Colors.white, colorText: Colors.black,);
       });
 
         Get.to(() => GroupSetupPage(user: baddyUser));
 
 
     } on FirebaseAuthException catch (e) {
+      String message = '';
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = '이미 등록된 이메일입니다.';
+          break;
+        case 'invalid-email':
+          message = '유효하지 않은 이메일 형식입니다.';
+          break;
+        case 'weak-password':
+          message = '비밀번호는 최소 6자 이상이어야 합니다.';
+          break;
+        case 'operation-not-allowed':
+          message = '이메일 가입이 비활성화된 상태입니다.';
+          break;
+        default:
+          message = '회원가입 중 오류 발생';
+          break;
+      }
+
       setState(() {
-        Get.snackbar(Constant.APP_NAME, e.message ?? '회원가입 중 오류 발생', backgroundColor: Colors.white,);
+        Get.snackbar(Constant.APP_NAME, message, backgroundColor: Colors.white, colorText: Colors.black,);
       });
     }
   }
@@ -174,7 +193,7 @@ class _AuthPage extends State<AuthPage> {
         user = result.user;
       }
 
-      Get.snackbar(Constant.APP_NAME, '로그인 성공', backgroundColor: Colors.white,);
+      Get.snackbar(Constant.APP_NAME, '로그인 성공', backgroundColor: Colors.white, colorText: Colors.black,);
 
       final token = await FirebaseMessaging.instance.getToken();
       final prefs = await SharedPreferences.getInstance();
@@ -246,7 +265,7 @@ class _AuthPage extends State<AuthPage> {
           message = '로그인 중 알 수 없는 오류가 발생했습니다.';
           break;
       }
-      Get.snackbar(Constant.APP_NAME, message, backgroundColor: Colors.white,);
+      Get.snackbar(Constant.APP_NAME, message, backgroundColor: Colors.white, colorText: Colors.black,);
     }
   }
 
