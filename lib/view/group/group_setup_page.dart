@@ -36,7 +36,9 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
     final groupId = _groupIdController.text.trim();
     if (groupId.isEmpty || _user == null) return;
 
-    final groupRef = FirebaseFirestore.instance.collection('groups').doc(groupId);
+    final groupRef = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId);
     final groupSnap = await groupRef.get();
 
     if (!groupSnap.exists) {
@@ -48,7 +50,7 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
 
       await _updateUserGroup(groupId);
     } else {
-      Get.snackbar("오류", "이미 존재하는 그룹 ID입니다.", backgroundColor: Colors.white,);
+      Get.snackbar("오류", "이미 존재하는 그룹 ID입니다.", backgroundColor: Colors.white);
     }
   }
 
@@ -57,17 +59,19 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
     final groupId = _groupIdController.text.trim();
     if (groupId.isEmpty || _user == null) return;
 
-    final groupRef = FirebaseFirestore.instance.collection('groups').doc(groupId);
+    final groupRef = FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId);
     final groupSnap = await groupRef.get();
 
     if (groupSnap.exists) {
       await groupRef.update({
-        'members': FieldValue.arrayUnion([_user!.email])
+        'members': FieldValue.arrayUnion([_user!.email]),
       });
 
       await _updateUserGroup(groupId);
     } else {
-      Get.snackbar("오류", "존재하지 않는 그룹입니다.", backgroundColor: Colors.white,);
+      Get.snackbar("오류", "존재하지 않는 그룹입니다.", backgroundColor: Colors.white);
     }
   }
 
@@ -75,9 +79,10 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
   Future<void> _updateUserGroup(String groupId) async {
     if (_user == null) return;
 
-    await FirebaseFirestore.instance.collection('baddyusers').doc(_user!.email).update({
-      'groupId': groupId,
-    });
+    await FirebaseFirestore.instance
+        .collection('baddyusers')
+        .doc(_user!.email)
+        .update({'groupId': groupId});
 
     _user!.groupId = groupId;
 
@@ -88,42 +93,59 @@ class _GroupSetupPageState extends State<GroupSetupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.black, title: const Text("그룹 설정", style: TextStyle(color: Colors.white, fontFamily: 'Maple_L',))),
-      body: _user == null
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _groupNameController,
-              decoration: const InputDecoration(labelText: "그룹 이름 (사용자가 볼 이름)"),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _groupIdController,
-              decoration: const InputDecoration(labelText: "그룹 ID (고유 ID값)"),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: _createGroup,
-              child: const Text("새 그룹 생성", style: TextStyle(fontFamily: 'Maple_L',)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: _joinGroup,
-              child: const Text("기존 그룹 참가", style: TextStyle(fontFamily: 'Maple_L',)),
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text(
+          "그룹 설정",
+          style: TextStyle(color: Colors.white, fontFamily: 'Maple_L'),
         ),
       ),
+      body:
+          _user == null
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _groupNameController,
+                      decoration: const InputDecoration(
+                        labelText: "그룹 이름 (사용자가 볼 이름)",
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _groupIdController,
+                      decoration: const InputDecoration(
+                        labelText: "그룹 ID (고유 ID값)",
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _createGroup,
+                      child: const Text(
+                        "새 그룹 생성",
+                        style: TextStyle(fontFamily: 'Maple_L'),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _joinGroup,
+                      child: const Text(
+                        "기존 그룹 참가",
+                        style: TextStyle(fontFamily: 'Maple_L'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 }

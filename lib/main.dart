@@ -8,10 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-
 import 'data/constant.dart';
 import 'firebase_options.dart';
 import 'intro/intro_page.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -42,7 +42,8 @@ Future<void> setupFlutterNotifications() async {
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin
+      >()
       ?.createNotificationChannel(channel);
 
   //알림 보낼 때 어떤 식으로 보낼지 정의(알림 창, 배지, 소리)
@@ -81,24 +82,24 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  if(!kIsWeb){
+
+  if (!kIsWeb) {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await setupFlutterNotifications();
     FlutterError.onError = (errorDetails) {
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
     };
 
-    PlatformDispatcher.instance.onError = (error , stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack , fatal: true);
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-    await FirebaseAppCheck.instance
-        .activate(
+    await FirebaseAppCheck.instance.activate(
       androidProvider: AndroidProvider.debug,
       appleProvider: AppleProvider.debug,
     );
   }
-
+  AuthRepository.initialize(appKey: 'faa6f8639d7339089700ff192901b57f');
   runApp(const MyApp());
 }
 
@@ -112,19 +113,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if(!kIsWeb){
+    if (!kIsWeb) {
       FirebaseMessaging.instance.getInitialMessage().then((value) {
         _resolved = true;
         initialMessage = value?.data.toString();
       });
-  // 앱이 실행될 때 메세지를 받으면 처리하는 콜백 함수
+      // 앱이 실행될 때 메세지를 받으면 처리하는 콜백 함수
       FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
-  // 앱이 백그라운드에서 실행 중일 때 사용자가 알람을 탭하여 앱을 열 때 호출
+      // 앱이 백그라운드에서 실행 중일 때 사용자가 알람을 탭하여 앱을 열 때 호출
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         //String linkId =  message.data['link'];
         //Get.to(LinkPage(link: linkId));
-        print('A new onMessageOpenedApp event was published! ${message.data}' );
+        print('A new onMessageOpenedApp event was published! ${message.data}');
       });
     }
     return GetMaterialApp(
